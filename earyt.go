@@ -5,6 +5,8 @@ import (
 
 	"github.com/WhiteNoiseCoder/earyt/logger"
 	"github.com/WhiteNoiseCoder/earyt/settings"
+	"github.com/WhiteNoiseCoder/earyt/tbot"
+	"github.com/WhiteNoiseCoder/earyt/yt"
 	"github.com/sirupsen/logrus"
 )
 
@@ -35,5 +37,15 @@ func main() {
 	}
 	defer loggerHolder.Close()
 
-	log().Infof("start telegram server")
+	bot, err := tbot.StartServer(set.Telegram)
+	if err != nil {
+		log().Errorf("Error on start telegram bot server: %v\n", err)
+		return
+	}
+	log().Infof("start telegram server, user: %s", bot.UserName())
+
+	ytDownloader := yt.Downloader{}
+	tbotHandlers := tbot.Handlers{YT: ytDownloader}
+
+	bot.Start(&tbotHandlers, &set.Telegram.Settings)
 }

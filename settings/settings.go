@@ -7,10 +7,12 @@ import (
 	"path/filepath"
 
 	"github.com/WhiteNoiseCoder/earyt/logger"
+	"github.com/WhiteNoiseCoder/earyt/tbot"
 )
 
 type Settings struct {
-	Logger logger.Settings `json:"log"`
+	Logger   logger.Settings `json:"log"`
+	Telegram tbot.Settings   `json:"telegram"`
 }
 
 func ParseSettings(settingsPath string) (Settings, error) {

@@ -1,5 +1,9 @@
 {
-    "log" : {
+    "log": {
         "path":"earyt.log"
+    },
+    "telegram": {
+        "token":"xxx",
+        "timeout":60
     }
 }
