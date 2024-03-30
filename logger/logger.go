@@ -2,6 +2,7 @@ package logger
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/sirupsen/logrus"
@@ -26,6 +27,11 @@ func setUpLoglevel(settings *Settings) {
 	}
 }
 
+func setUpStandartLogConnector() {
+	log.SetFlags(0)
+	log.SetOutput(logrus.StandardLogger().WriterLevel(logrus.TraceLevel))
+}
+
 // SetUp is Logger constructor
 func SetUp(settings *Settings) (*Holder, error) {
 	holder := new(Holder)
@@ -43,6 +49,7 @@ func SetUp(settings *Settings) (*Holder, error) {
 	}
 
 	setUpLoglevel(settings)
+	setUpStandartLogConnector()
 	return holder, nil
 }
 
