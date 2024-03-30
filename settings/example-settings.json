@@ -1,6 +1,7 @@
 {
     "log": {
-        "path":"earyt.log"
+        "path":"earyt.log",
+        "level":"trace"
     },
     "telegram": {
         "token":"xxx",

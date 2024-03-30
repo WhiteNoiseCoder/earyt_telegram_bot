@@ -12,6 +12,20 @@ type Holder struct {
 	file *os.File
 }
 
+func setUpLoglevel(settings *Settings) {
+	if len(settings.Level) > 0 {
+		level, err := logrus.ParseLevel(settings.Level)
+		if err == nil {
+			logrus.SetLevel(level)
+		} else {
+			logrus.Errorf("Error on parse log level: %v", err)
+			logrus.SetLevel(logrus.TraceLevel)
+		}
+	} else {
+		logrus.SetLevel(logrus.InfoLevel)
+	}
+}
+
 // SetUp is Logger constructor
 func SetUp(settings *Settings) (*Holder, error) {
 	holder := new(Holder)
@@ -27,6 +41,8 @@ func SetUp(settings *Settings) (*Holder, error) {
 		}
 		logrus.SetOutput(holder.file)
 	}
+
+	setUpLoglevel(settings)
 	return holder, nil
 }
 
