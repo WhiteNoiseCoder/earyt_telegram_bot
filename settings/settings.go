@@ -8,11 +8,13 @@ import (
 
 	"github.com/WhiteNoiseCoder/earyt/logger"
 	"github.com/WhiteNoiseCoder/earyt/tbot"
+	"github.com/WhiteNoiseCoder/earyt/yt"
 )
 
 type Settings struct {
 	Logger   logger.Settings `json:"log"`
 	Telegram tbot.Settings   `json:"telegram"`
+	YT       yt.Settings     `json:"youtube_downloader"`
 }
 
 func ParseSettings(settingsPath string) (Settings, error) {

@@ -44,7 +44,7 @@ func main() {
 	}
 	log().Infof("start telegram server, user: %s", bot.UserName())
 
-	ytDownloader := yt.Downloader{}
+	ytDownloader := yt.CreateDownloader(set.YT)
 	tbotHandlers := tbot.Handlers{YT: ytDownloader}
 
 	bot.Start(&tbotHandlers, &set.Telegram.Settings)

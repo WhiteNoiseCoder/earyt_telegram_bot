@@ -6,5 +6,9 @@
     "telegram": {
         "token":"xxx",
         "timeout":60
+    },
+    "youtube_downloader": {
+        "temp_path":"/tmp/earyt",
+        "ffmpeg_path":"/usr/bin/ffmpeg"
     }
 }
