@@ -4,10 +4,15 @@ import (
 	"fmt"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/sirupsen/logrus"
 )
 
 type Server struct {
 	bot *tgbotapi.BotAPI
+}
+
+func log() *logrus.Entry {
+	return logrus.WithFields(logrus.Fields{"channel": "tbot"})
 }
 
 // return UserName which registred in telegram bot
