@@ -83,27 +83,27 @@ func bestFormatForAudio(formats youtube.FormatList) (*youtube.Format, error) {
 	return &audioformats[len(audioformats)-1], nil
 }
 
-func (d Downloader) download(url string) (string, error) {
+func (d Downloader) download(url string) (DownloadedInfo, error) {
 	client := youtube.Client{}
 	video, err := client.GetVideo(url)
 	if err != nil {
-		return "", err
+		return DownloadedInfo{}, err
 	}
 
 	bestAudioFormat, err := bestFormatForAudio(video.Formats)
 	if err != nil {
-		return "", fmt.Errorf("error on choice audio format for download: %v", err)
+		return DownloadedInfo{}, fmt.Errorf("error on choice audio format for download: %v", err)
 	}
 
 	stream, size, err := client.GetStream(video, bestAudioFormat)
 	if err != nil {
-		return "", fmt.Errorf("error on get stream for download: %v", err)
+		return DownloadedInfo{}, fmt.Errorf("error on get stream for download: %v", err)
 	}
 	defer stream.Close()
 
 	file, err := os.CreateTemp(d.set.TempPath, "*.mp4")
 	if err != nil {
-		return "", fmt.Errorf("error on creating temp file for download: %v", err)
+		return DownloadedInfo{}, fmt.Errorf("error on creating temp file for download: %v", err)
 	}
 	filename := file.Name()
 
@@ -113,10 +113,10 @@ func (d Downloader) download(url string) (string, error) {
 	if err != nil {
 		file.Close()
 		os.Remove(filename)
-		return "", fmt.Errorf("error on saving downloaded stream: %v", err)
+		return DownloadedInfo{}, fmt.Errorf("error on saving downloaded stream: %v", err)
 	}
 	defer file.Close()
 	log().Tracef("finish download youtube file, url: %s", url)
 
-	return filename, nil
+	return DownloadedInfo{Path: filename, Name: video.Title}, nil
 }

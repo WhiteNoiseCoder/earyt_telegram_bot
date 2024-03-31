@@ -4,6 +4,7 @@ go 1.21.4
 
 require (
 	github.com/WhiteNoiseCoder/trouter v0.0.0-20240327103047-aced008dc762
+	github.com/flytam/filenamify v1.2.0
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/kkdai/youtube/v2 v2.10.1
 	github.com/sirupsen/logrus v1.9.3
