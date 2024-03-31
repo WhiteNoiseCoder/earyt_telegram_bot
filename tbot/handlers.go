@@ -24,6 +24,11 @@ type Handlers struct {
 // Download youtube audio handler
 func (h Handlers) TDownloadYTAudioHandler(bot *tgbotapi.BotAPI, update *tgbotapi.Update) error {
 	log().Infof("download youtube %s", update.Message.Text)
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Prepare ...")
+	msg.ReplyToMessageID = update.Message.MessageID
+	sendedWaitMessage, errWaitMessage := bot.Send(msg)
+
 	fileInfo, err := h.DownloadAudio(update.Message.Text)
 	if err != nil {
 		return err
@@ -31,6 +36,9 @@ func (h Handlers) TDownloadYTAudioHandler(bot *tgbotapi.BotAPI, update *tgbotapi
 	defer os.Remove(fileInfo.Path)
 	log().Debugf("upload audio from %s", update.Message.Text)
 
+	if errWaitMessage == nil {
+		bot.Send(tgbotapi.NewDeleteMessage(sendedWaitMessage.Chat.ID, sendedWaitMessage.MessageID))
+	}
 	safeTitle, err := filenamify.Filenamify(fileInfo.Name, filenamify.Options{MaxLength: 140})
 	if err == nil {
 		safeTitle += filepath.Ext(fileInfo.Path)
