@@ -37,8 +37,8 @@ func (h Handlers) TDownloadYTAudioHandler(bot *tgbotapi.BotAPI, update *tgbotapi
 	} else {
 		log().Errorf("Error on create human readable filename %v", err)
 	}
-
 	audiofileRequest := tgbotapi.NewDocument(update.Message.Chat.ID, FileData{Path: fileInfo.Path, Name: safeTitle})
+	audiofileRequest.ReplyToMessageID = update.Message.MessageID
 	_, err = bot.Send(audiofileRequest)
 	if err != nil {
 		log().Errorf("Error on send file %v", err)
