@@ -1,6 +1,7 @@
 package tbot
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -19,6 +20,22 @@ type YT interface {
 // Telegram interfaces for handle user query
 type Handlers struct {
 	YT
+}
+
+func (h Handlers) TStartHandler(bot *tgbotapi.BotAPI, update *tgbotapi.Update) error {
+	var startText string = `Hello!
+	This is telegram bot for downloading audio from YouTube
+		
+	/start - write info
+	/audio <YouTube URL> - download audio from YouTube
+	<YouTube URL> - download audio from YouTube`
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, startText)
+	_, err := bot.Send(msg)
+	if err != nil {
+		return fmt.Errorf("error on send start message %v", err)
+	}
+	return nil
 }
 
 // Download youtube audio handler
@@ -59,6 +76,8 @@ func (h Handlers) TDownloadYTAudioHandler(bot *tgbotapi.BotAPI, update *tgbotapi
 func (ser *Server) Start(h *Handlers, set *trouter.Settings) {
 	router := trouter.NewTRouter(ser.bot, set)
 
+	startHandler := trouter.CreateHandlerKit(h.TStartHandler)
+	router.AddHandler("^\\/start$", startHandler.Handler)
 	downloadYTAudioHandler := trouter.CreateHandlerKit(h.TDownloadYTAudioHandler)
 	router.AddHandler("^\\/audio$", downloadYTAudioHandler.Handler)
 	router.AddDefaultHandler(downloadYTAudioHandler.Handler)
