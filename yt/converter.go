@@ -15,9 +15,15 @@ func (d Downloader) convertToAudio(filename string) (string, error) {
 	log().Debugf("convert video %s to audio %s", filename, audiofilename)
 	var buf_out bytes.Buffer
 	var buf_err bytes.Buffer
-	err := ffmpeg.Input(filename, ffmpeg.KwArgs{}).
-		Output(audiofilename, ffmpeg.KwArgs{}).SetFfmpegPath(d.set.FfmpegPath).
-		WithOutput(&buf_out, &buf_err).Run()
+
+	output := ffmpeg.Input(filename, ffmpeg.KwArgs{}).
+		Output(audiofilename, ffmpeg.KwArgs{})
+
+	if len(d.set.FfmpegPath) > 0 {
+		output.SetFfmpegPath(d.set.FfmpegPath)
+	}
+
+	err := output.WithOutput(&buf_out, &buf_err).Run()
 
 	if err != nil {
 		log().Errorf("error on ffmpeg convert video %s to audio %s : %s", filename, audiofilename, buf_err.String())
